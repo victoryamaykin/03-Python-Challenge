@@ -3,6 +3,8 @@ import csv
 
 csvpath = os.path.join('..', 'Resources', 'budget_data.csv')
 
+#variables
+
 months = []
 profit_loss = []
 pybank ={}
