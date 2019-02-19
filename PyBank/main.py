@@ -1,16 +1,15 @@
 import os
 import csv
 
-csvpath = os.path.join('..', 'Resources', 'budget_data.csv')
-
-#variables
-
+# Variables
 months = []
-profit_loss = []
-pybank ={}
+#profit-loses 
+p = []
 average_change = 0
 total_months = 0 
-net_total = 0
+
+# Load csv file 
+csvpath = os.path.join('..', 'Resources', 'budget_data.csv')
 
 with open(csvpath, newline="") as csvfile:
 
@@ -18,37 +17,44 @@ with open(csvpath, newline="") as csvfile:
         reader = csv.reader(csvfile)
         next(reader, None)
 
-#add values to lists
+# Add values to lists
         for row in reader:
             month = row[0]
             months.append(month)
             values = int(row[1])
-            profit_loss.append(values)
+            p.append(values)
 
+# Find the total of months in the entire period 
 total_months = len(months)
 
-#find the average change in profits 
-net_total = 0
+# Find the average of changes in Profits/Losses 
+net_total = []
 
-def average(profit_loss):
-    length = len(profit_loss)
-    net_total = sum(profit_loss)
+for n in p:
+        change = p[n] - p[n - 1]
+        net_total.append(change) 
+
+def average(net_total):
+    length = len(net_total)
+    net_total = sum(net_total)
     return net_total /length 
 
-net_total = sum(profit_loss)
-average_change = int(average(profit_loss))
+average_change = int(average(net_total))
 
-min_profit_loss = profit_loss[profit_loss.index(min(profit_loss))]
-max_profit_loss = profit_loss[profit_loss.index(max(profit_loss))]
+# Find the greatest increase/decrease (date and amount) over the entire period
+min_p = p[p.index(min(p))]
+max_p = p[p.index(max(p))]
 
+# Print out results to console
 print("Financial Analysis")
 print("--------------------")
 print(f"Total Months: {total_months}")
 print(f"Total: ${net_total}")
 print(f"Average Change: ${average_change}")
-print(f'Greatest Increase in Profits: {months[profit_loss.index(max(profit_loss))]} (${max_profit_loss})')
-print(f"Greatest Descrease in Profits: {months[profit_loss.index(min(profit_loss))]} (${min_profit_loss})")
+print(f'Greatest Increase in Profits: {months[p.index(max(p))]} (${max_p})')
+print(f"Greatest Descrease in Profits: {months[p.index(min(p))]} (${min_p})")
 
+# Create a text file with the results 
 output_file = '../PyBank/financial_analysis.txt'
 with open(output_file, "w", newline="") as datafile:
     csvwriter = csv.writer(datafile)
@@ -57,5 +63,5 @@ with open(output_file, "w", newline="") as datafile:
     csvwriter.writerow([f"Total Months: {total_months}"])
     csvwriter.writerow([f"Total: ${net_total}"])
     csvwriter.writerow([f"Average Change: ${average_change}"])
-    csvwriter.writerow([f'Greatest Increase in Profits: {months[profit_loss.index(max(profit_loss))]} (${max_profit_loss})'])
-    csvwriter.writerow([f"Greatest Descrease in Profits: {months[profit_loss.index(min(profit_loss))]} (${min_profit_loss})"])
+    csvwriter.writerow([f'Greatest Increase in Profits: {months[p.index(max(p))]} (${max_p})'])
+    csvwriter.writerow([f"Greatest Descrease in Profits: {months[p.index(min(p))]} (${min_p})"])
