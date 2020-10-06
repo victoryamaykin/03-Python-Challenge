@@ -1,17 +1,14 @@
 import os
 import csv
 
-csvpath = os.path.join('..', 'Resources', 'election_data.csv')
+csvpath = os.path.join('Resources', 'election_data.csv')
 
-total_votes = []
-count_correy = 0
-count_khan = 0 
-count_li = 0
-count_otooley = 0 
-khan_percent = 0
-correy_percent = 0 
-li_percent = 0
-otooley_percent = 0 
+total_votes = 0 
+candidate_list = []
+candidate_dict = {}
+
+winning_vote = 0 
+winner = ""
 
 with open(csvpath, newline="") as csvfile:
 
@@ -20,52 +17,51 @@ with open(csvpath, newline="") as csvfile:
         next(reader, None)
 
         for row in reader:
-            votes = row[0]
-            total_votes.append(votes)
-            if row[2] == "Correy":
-                count_correy = count_correy + 1 
-            elif row[2] == "Khan":
-                count_khan = count_khan + 1 
-            elif row[2] == "Li":
-                count_li = count_li + 1 
-            else:
-                count_otooley = count_otooley + 1
+            # start counting total votes    
+            total_votes += 1 
+        
+            # get the reference to the candidate name from the row 
+            candidate = row[2]
 
-total_votes = len(total_votes)
+            # begin the if statement 
+            if candidate not in candidate_list:
+            # add the candidate to the list_candidate 
+                candidate_list.append(candidate)
+                candidate_dict[candidate] = 0
 
-khan_percent = (count_khan / total_votes)*100
-khan_percent = round(khan_percent, 3)
-correy_percent = (count_correy /total_votes)*100
-correy_percent = round(correy_percent, 3)
-li_percent = (count_li / total_votes) * 100 
-li_percent = round(li_percent, 3)
-otooley_percent = (count_otooley / total_votes) * 100
-otooley_percent = round(otooley_percent, 3)
+            
+            candidate_dict[candidate] +=1 
 
-print("Election Results")
-print("--------------------")
-print(f"Total Votes: {total_votes}")
-print("--------------------")
-print(f"Khan: {khan_percent}% ({count_khan})")
-print(f"Correy: {correy_percent}% ({count_correy})")
-print(f"Li: {li_percent}% ({count_li})")
-print(f"O'Tooley: {otooley_percent}% ({count_otooley})")
-print("--------------------")
-print(f"Winner: Khan ")
-print("--------------------")
-
-output_file = '../PyPoll/election_results.txt'
+output_file = '../PyPoll/Analysis/election_results.txt'
 with open(output_file, "w", newline="") as datafile:
-    csvwriter = csv.writer(datafile)
+    
+    # print the total votes 
+    print(f"Election Results")
+    print(f"--------------------")
+    print(f"Total Votes: {total_votes}")
+    print(f"--------------------")
 
-    csvwriter.writerow(["Election Results"])
-    csvwriter.writerow(["--------------------"])
-    csvwriter.writerow([f"Total Votes: {total_votes}"])
-    csvwriter.writerow(["--------------------"])
-    csvwriter.writerow([f"Khan: {khan_percent}% ({count_khan})"])
-    csvwriter.writerow([f"Correy: {correy_percent}% ({count_correy})"])
-    csvwriter.writerow([f"Li: {li_percent}% ({count_li})"])
-    csvwriter.writerow([f"O'Tooley: {otooley_percent}% ({count_otooley})"])
-    csvwriter.writerow(["--------------------"])
-    csvwriter.writerow([f"Winner: Khan"])
-    csvwriter.writerow(["--------------------"])
+    datafile.write(f"Election Results\n")
+    datafile.write(f"--------------------\n")
+    datafile.write(f"Total Votes: {total_votes}\n")
+    datafile.write(f"--------------------\n")
+    
+    # loop through the candidates and calculate their percentage of the votes 
+    for candidate in candidate_dict: 
+        percentage = round(float(candidate_dict[candidate])/float(total_votes),2)
+
+        print(f"{candidate}: {percentage:.3%} ({candidate_dict[candidate]})\n")
+        datafile.write(f"{candidate}: {percentage:.3%} ({candidate_dict[candidate]})\n")
+
+        votes = candidate_dict[candidate]
+        if votes > winning_vote:
+            winning_vote = votes
+            winner = candidate
+
+    # print to terminal and the txt file       
+    print(f"--------------------")
+    print(f"Winner: {winner}")
+    print(f"--------------------")
+    datafile.write(f"--------------------\n")
+    datafile.write(f"Winner: {winner}\n")
+    datafile.write(f"--------------------")
