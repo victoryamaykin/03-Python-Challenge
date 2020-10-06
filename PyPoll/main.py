@@ -32,7 +32,7 @@ with open(csvpath, newline="") as csvfile:
             
             candidate_dict[candidate] +=1 
 
-output_file = '../PyPoll/Analysis/election_results.txt'
+output_file = 'Analysis/election_results.txt'
 with open(output_file, "w", newline="") as datafile:
     
     # print the total votes 
