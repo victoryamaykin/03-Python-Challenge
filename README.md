@@ -1,4 +1,4 @@
-# 03-Python-Challenge
+# Election Results: Python Challenge
 Week 3 Homework PyBank and PyPoll
 
 ### Goals
