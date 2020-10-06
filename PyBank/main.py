@@ -48,7 +48,7 @@ print(f'Greatest Increase in Profits: {months[p.index(max(p))]} (${max_p})')
 print(f"Greatest Descrease in Profits: {months[p.index(min(p))]} (${min_p})")
 
 # Create a text file with the results
-output_file = '../PyBank/Analysis/financial_analysis.txt'
+output_file = 'Analysis/financial_analysis.txt'
 with open(output_file, "w", newline="") as datafile:
     csvwriter = csv.writer(datafile)
     csvwriter.writerow(["Financial Analysis"])
